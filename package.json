@@ -1,0 +1,14 @@
+{
+  "name": "shortlink",
+  "version": "0.0.0",
+  "description": "URL Cmpressor",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Rishi Vishwakarma",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
