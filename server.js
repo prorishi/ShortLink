@@ -34,15 +34,14 @@ server.use(
 );
 
 server.get("/", (request, response) => {
-    fetch("https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new")
+    fetch("https://www.random.org/strings/?num=2&len=5&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new")
         .then((fetched) => {
             fetched.text().then((text) => {
-                let captcha = text.slice(0, text.length - 1);
-                console.log(request.ip);
+                let [captcha, secode] = text.split('\n');
                 console.log(captchas);
-                captchas[request.ip] = captcha;
+                captchas[secode] = captcha;
                 console.log(captcha);
-                response.end(file("./views/index.html").replace("{{captcha}}", captcha));
+                response.end(file("./views/index.html").replace("{{captcha}}", captcha).replace(/{{secode}}/g, secode));
             });
         })
         .catch((error) => {
@@ -66,6 +65,6 @@ server.post('/', (request, response) => {
     response.end('awesome')
 })
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 3000, '0.0.0.0');
 
 //https://www.random.org/strings/?num=2&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new
