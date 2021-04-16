@@ -75,8 +75,9 @@ server.post("/", (request, response) => {
 
 server.get('/:short', (request, response) => {
     fetchLinks()
+    console.log(links);
     if (Object.keys(links).includes(request.params.short)) {
-        response.redirect(links[request.body.short])
+        response.redirect(links[request.params.short])
     } else {
         response.status(404)
     }
