@@ -34,15 +34,15 @@ server.use(
 );
 
 server.get("/", (request, response) => {
-    fetch("https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new")
+    fetch("https://www.random.org/strings/?num=2&len=5&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new")
         .then((fetched) => {
             fetched.text().then((text) => {
-                let captcha = text.slice(0, text.length - 1);
+                let [captcha, sessionToken] = text.split('\n');
                 console.log(captchas);
-                console.log(request.ip);
-                captchas[request.ip] = captcha;
+                console.log(sessionToken);
+                captchas[sessionToken] = captcha;
                 console.log(captcha);
-                response.end(file("./views/index.html").replace("{{captcha}}", captcha).replace('{{ip}}', request.ip));
+                response.end(file("./views/index.html").replace("{{captcha}}", captcha).replace('{{sessionToken}}', sessionToken));
             });
         })
         .catch((error) => {
@@ -51,21 +51,22 @@ server.get("/", (request, response) => {
 });
 
 server.post("/shorten", (request, response) => {
-    console.log(request.ip);
-    console.log(request.body.captchaResponse, captchas[request.body.ip]);
-    console.log(request.body.captchaResponse == captchas[request.body.ip]);
-    if (request.body.captchaResponse == captchas[request.body.ip]) {
+    let {captchaResponse, sessionToken} = request.body;
+    console.log(sessionToken);
+    console.log(captchaResponse, captchas[sessionToken]);
+    console.log(captchaResponse == captchas[sessionToken]);
+    if (captchaResponse == captchas[sessionToken]) {
         response.sendFile(__dirname + '/views/shorten.html');
     } else {
         response.end("not valid");
     }
-    console.log(request.body.captchaResponse);
+    delete captchas[sessionToken]
 });
 
 server.post('/', (request, response) => {
     response.end('awesome')
 })
 
-server.listen(process.env.PORT || 3000, '0.0.0.0');
+server.listen(process.env.PORT || 3000);
 
 //https://www.random.org/strings/?num=2&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new

@@ -22,12 +22,11 @@
 
         <form action="/shorten" method="post" autocomplete="off">
             <input type="text" name="captchaResponse" required />
-            <input type="text" name="ip" value="{{ip}}" hidden>
+            <input type="text" name="sessionToken" value="{{sessionToken}}" hidden>
             <button type="submit">start now!</button>
         </form>
 
         <script>
-            localStorage.setItem("secode", "{{secode}}");
             const captcha = document.getElementsByTagName('canvas')[0].getContext('2d');
             captcha.font = '20px Consolas';
             captcha.fillText('{{captcha}}', 10, 30);
