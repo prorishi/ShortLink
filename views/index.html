@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ShortLink</title>
+        <style>
+            canvas {
+                background: orange;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>ShortLink</h1>
+        <h3>Shorten you links quickly</h3>
+        <br /><br />
+
+        <h3>enter captcha to start:</h3>
+        <canvas height="50"></canvas>
+        <button onclick="location.reload();">Refresh captcha</button>
+
+        <form action="/shorten" method="post" autocomplete="off">
+            <input type="text" name="captchaResponse" required />
+            <button type="submit">start now!</button>
+        </form>
+
+        <script>
+            const captcha = document.getElementsByTagName('canvas')[0].getContext('2d');
+            captcha.font = '20px Consolas';
+            captcha.fillText('{{captcha}}', 10, 30);
+        </script>
+    </body>
+</html>

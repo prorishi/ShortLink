@@ -1,7 +1,7 @@
 {
   "name": "shortlink",
   "version": "0.0.0",
-  "description": "URL Cmpressor",
+  "description": "URL Compressor",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -9,6 +9,7 @@
   "author": "Rishi Vishwakarma",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
   }
 }

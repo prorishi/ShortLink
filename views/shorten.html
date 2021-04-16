@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ShortLink</title>
+    </head>
+    <body>
+        <h1>ShortLink</h1>
+        <br />
+        <br />
+        <form action="/" method="post" autocomplete="off">
+            original link <input type="url" name="original" required />
+            <br>
+            custom <input type="text" name="custom" required /> or <button type="button" id="rnd">use a random one</button>
+            <br>
+            <button type="submit">submit</button>
+        </form>
+
+        <script>
+            document.getElementById('rnd').onclick = () => {
+                document.getElementsByName('custom')[0].value = Math.random().toString(36).substring(7);
+            }
+        </script>
+    </body>
+</html>

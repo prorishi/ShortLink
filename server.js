@@ -1,0 +1,65 @@
+const express = require("express");
+const fs = require("fs");
+const fetch = require("node-fetch");
+
+const captchas = {};
+let links;
+
+function fetchLinks() {
+    links = JSON.parse(file("links.json"));
+}
+function setLinks(short, original) {
+    fetchLinks();
+    if (Object.keys(links).includes(short)) {
+        return false;
+    } else {
+        links[short] = original;
+        fs.writeFileSync("./links.json", JSON.stringify(links));
+        return true;
+    }
+}
+
+function file(path) {
+    return fs.readFileSync(path, {
+        encoding: "utf-8",
+        flag: "r",
+    });
+}
+
+const server = express();
+server.use(
+    express.urlencoded({
+        extended: false,
+    })
+);
+
+server.get("/", (request, response) => {
+    fetch("https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new")
+        .then((fetched) => {
+            fetched.text().then((text) => {
+                let captcha = text.slice(0, text.length - 1);
+                captchas[request.ip] = captcha;
+                response.end(file("./views/index.html").replace("{{captcha}}", captcha));
+            });
+        })
+        .catch((error) => {
+            response.end("Something's wrong\nplease try later");
+        });
+});
+
+server.post("/shorten", (request, response) => {
+    if (request.body.captchaResponse == captchas[request.ip]) {
+        response.sendFile(__dirname + '/views/shorten.html');
+    } else {
+        response.end("not valid");
+    }
+    console.log(request.body.captchaResponse);
+});
+
+server.post('/', (request, response) => {
+    response.end('awesome')
+})
+
+server.listen(80);
+
+//https://www.random.org/strings/?num=2&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new
