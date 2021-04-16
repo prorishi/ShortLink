@@ -60,6 +60,6 @@ server.post('/', (request, response) => {
     response.end('awesome')
 })
 
-server.listen(80);
+server.listen(process.env.PORT || 3000);
 
 //https://www.random.org/strings/?num=2&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new
