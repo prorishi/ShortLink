@@ -37,12 +37,12 @@ server.get("/", (request, response) => {
     fetch("https://www.random.org/strings/?num=2&len=5&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new")
         .then((fetched) => {
             fetched.text().then((text) => {
-                let [captcha, sessionToken] = text.split('\n');
+                let [captcha, sessionToken] = text.split("\n");
                 console.log(captchas);
                 console.log(sessionToken);
                 captchas[sessionToken] = captcha;
                 console.log(captcha);
-                response.end(file("./views/index.html").replace("{{captcha}}", captcha).replace('{{sessionToken}}', sessionToken));
+                response.end(file("./views/index.html").replace("{{captcha}}", captcha).replace("{{sessionToken}}", sessionToken));
             });
         })
         .catch((error) => {
@@ -51,20 +51,35 @@ server.get("/", (request, response) => {
 });
 
 server.post("/shorten", (request, response) => {
-    let {captchaResponse, sessionToken} = request.body;
+    let { captchaResponse, sessionToken } = request.body;
     console.log(sessionToken);
     console.log(captchaResponse, captchas[sessionToken]);
     console.log(captchaResponse == captchas[sessionToken]);
     if (captchaResponse == captchas[sessionToken]) {
-        response.sendFile(__dirname + '/views/shorten.html');
+        response.sendFile(__dirname + "/views/shorten.html");
     } else {
         response.end("not valid");
     }
-    delete captchas[sessionToken]
+    delete captchas[sessionToken];
 });
 
-server.post('/', (request, response) => {
-    response.end('awesome')
+server.post("/", (request, response) => {
+    fetchLinks();
+    let { original, custom } = request.body;
+    if (setLinks(custom, original)) {
+        response.end("awesome");
+    } else {
+        response.end("not awesome");
+    }
+});
+
+server.get('/:short', (request, response) => {
+    fetchLinks()
+    if (Object.keys(links).includes(request.params.short)) {
+        response.redirect(links[request.body.short])
+    } else {
+        response.status(404)
+    }
 })
 
 server.listen(process.env.PORT || 3000);
