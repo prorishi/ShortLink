@@ -38,6 +38,8 @@ server.get("/", (request, response) => {
         .then((fetched) => {
             fetched.text().then((text) => {
                 let captcha = text.slice(0, text.length - 1);
+                console.log(request.ip);
+                console.log(captchas);
                 captchas[request.ip] = captcha;
                 console.log(captcha);
                 response.end(file("./views/index.html").replace("{{captcha}}", captcha));
