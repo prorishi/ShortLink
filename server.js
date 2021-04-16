@@ -39,6 +39,7 @@ server.get("/", (request, response) => {
             fetched.text().then((text) => {
                 let captcha = text.slice(0, text.length - 1);
                 captchas[request.ip] = captcha;
+                console.log(captcha);
                 response.end(file("./views/index.html").replace("{{captcha}}", captcha));
             });
         })
@@ -48,6 +49,7 @@ server.get("/", (request, response) => {
 });
 
 server.post("/shorten", (request, response) => {
+    console.log(request.body.captchaResponse);
     if (request.body.captchaResponse == captchas[request.ip]) {
         response.sendFile(__dirname + '/views/shorten.html');
     } else {
