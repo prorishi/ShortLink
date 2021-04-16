@@ -34,15 +34,15 @@ server.use(
 );
 
 server.get("/", (request, response) => {
-    fetch("https://www.random.org/strings/?num=2&len=5&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new")
+    fetch("https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new")
         .then((fetched) => {
             fetched.text().then((text) => {
-                let [captcha, secode] = text.split('\n');
+                let captcha = text.slice(0, text.length - 1);
                 console.log(captchas);
                 console.log(request.ip);
-                captchas[secode] = captcha;
+                captchas[request.ip] = captcha;
                 console.log(captcha);
-                response.end(file("./views/index.html").replace("{{captcha}}", captcha).replace(/{{secode}}/g, secode));
+                response.end(file("./views/index.html").replace("{{captcha}}", captcha).replace('{{ip}}', request.ip));
             });
         })
         .catch((error) => {
@@ -52,9 +52,9 @@ server.get("/", (request, response) => {
 
 server.post("/shorten", (request, response) => {
     console.log(request.ip);
-    console.log(request.body.captchaResponse, captchas[request.ip]);
-    console.log(request.body.captchaResponse == captchas[request.ip]);
-    if (request.body.captchaResponse == captchas[request.ip]) {
+    console.log(request.body.captchaResponse, captchas[request.body.ip]);
+    console.log(request.body.captchaResponse == captchas[request.body.ip]);
+    if (request.body.captchaResponse == captchas[request.body.ip]) {
         response.sendFile(__dirname + '/views/shorten.html');
     } else {
         response.end("not valid");
