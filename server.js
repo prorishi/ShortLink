@@ -39,6 +39,7 @@ server.get("/", (request, response) => {
             fetched.text().then((text) => {
                 let [captcha, secode] = text.split('\n');
                 console.log(captchas);
+                console.log(request.ip);
                 captchas[secode] = captcha;
                 console.log(captcha);
                 response.end(file("./views/index.html").replace("{{captcha}}", captcha).replace(/{{secode}}/g, secode));
