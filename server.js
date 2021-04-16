@@ -51,6 +51,7 @@ server.get("/", (request, response) => {
 server.post("/shorten", (request, response) => {
     console.log(request.ip);
     console.log(request.body.captchaResponse, captchas[request.ip]);
+    console.log(request.body.captchaResponse == captchas[request.ip]);
     if (request.body.captchaResponse == captchas[request.ip]) {
         response.sendFile(__dirname + '/views/shorten.html');
     } else {
